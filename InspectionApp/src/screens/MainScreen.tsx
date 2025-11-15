@@ -1,6 +1,6 @@
 /**
- * Главный экран приложения
- * Ввод объекта и элемента, переход к камере
+ * Главный экран приложения ЗиС Прогноз
+ * Платформа обследователя
  */
 
 import React, { useState, useEffect } from 'react';
@@ -13,11 +13,13 @@ import {
   FlatList,
   Alert,
   Vibration,
+  Image,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackParamList, RecentItem } from '../types';
 import { FileManager } from '../utils/fileManager';
+import { colors, typography, spacing, borderRadius, layout } from '../constants/theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Main'>;
 
@@ -125,10 +127,20 @@ export default function MainScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      {/* Заголовок */}
+      {/* Заголовок с брендингом */}
       <View style={styles.header}>
-        <Text style={styles.title}>Inspection App</Text>
-        <Text style={styles.subtitle}>{projectName}</Text>
+        {/* Место для логотипа */}
+        <View style={styles.logoPlaceholder}>
+          {/* TODO: Заменить на <Image source={require('../../assets/logo.png')} style={styles.logo} /> */}
+          <Text style={styles.logoText}>ЛОГО</Text>
+        </View>
+
+        <View style={styles.brandingContainer}>
+          <Text style={styles.brandTitle}>ЗиС Прогноз</Text>
+          <Text style={styles.brandSubtitle}>платформа обследователя</Text>
+        </View>
+
+        <Text style={styles.projectName}>{projectName}</Text>
       </View>
 
       {/* Поля ввода */}
@@ -140,6 +152,7 @@ export default function MainScreen({ navigation }: Props) {
             value={object}
             onChangeText={setObject}
             placeholder="Например: ТП1, Склад_А"
+            placeholderTextColor={colors.lightGray}
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus
@@ -167,6 +180,7 @@ export default function MainScreen({ navigation }: Props) {
             value={element}
             onChangeText={setElement}
             placeholder="Например: РУ_10кВ, Отсек_1"
+            placeholderTextColor={colors.lightGray}
             autoCapitalize="none"
             autoCorrect={false}
           />
@@ -237,127 +251,176 @@ export default function MainScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 20,
+    backgroundColor: colors.backgroundGray,
+    padding: spacing.md,
   },
+
+  // Заголовок и брендинг
   header: {
-    marginTop: 40,
-    marginBottom: 30,
+    marginTop: spacing.xl,
+    marginBottom: spacing.lg,
     alignItems: 'center',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+  logoPlaceholder: {
+    width: layout.logoWidth,
+    height: layout.logoHeight,
+    backgroundColor: layout.logoPlaceholderColor,
+    borderRadius: borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+    // Место для изображения логотипа
+    // backgroundImage: url('path/to/logo.png') - для веба
   },
-  subtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 5,
+  logoText: {
+    fontSize: typography.body,
+    color: colors.white,
+    fontWeight: typography.bold,
   },
+  logo: {
+    // Стиль для реального логотипа (когда добавите изображение)
+    width: layout.logoWidth,
+    height: layout.logoHeight,
+    resizeMode: 'contain',
+  },
+  brandingContainer: {
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  brandTitle: {
+    fontSize: typography.heading,
+    fontWeight: typography.bold,
+    color: colors.primary,
+    letterSpacing: 1,
+  },
+  brandSubtitle: {
+    fontSize: typography.caption,
+    color: colors.accent, // Темно-красный
+    marginTop: spacing.xs,
+    fontWeight: typography.medium,
+  },
+  projectName: {
+    fontSize: typography.caption,
+    color: colors.lightGray,
+    marginTop: spacing.sm,
+  },
+
+  // Поля ввода
   inputSection: {
-    marginBottom: 30,
+    marginBottom: spacing.lg,
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: spacing.md,
   },
   label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
+    fontSize: typography.body,
+    fontWeight: typography.semibold,
+    color: colors.primary,
+    marginBottom: spacing.sm,
   },
   input: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    fontSize: 18,
-    minHeight: 80,
+    backgroundColor: colors.white,
+    borderWidth: 2,
+    borderColor: colors.borderGray,
+    borderRadius: borderRadius.md,
+    padding: spacing.md,
+    fontSize: typography.body,
+    minHeight: layout.buttonMinHeight,
+    color: colors.primary,
   },
   quickButtons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 8,
-    gap: 8,
+    marginTop: spacing.sm,
+    gap: spacing.sm,
   },
   quickButton: {
-    backgroundColor: '#e0e0e0',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    backgroundColor: colors.borderGray,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.xl,
   },
   quickButtonText: {
-    fontSize: 14,
-    color: '#555',
+    fontSize: typography.caption,
+    color: colors.gray,
   },
+
+  // Кнопки действий
   actionButtons: {
     flexDirection: 'row',
-    gap: 15,
-    marginBottom: 30,
+    gap: spacing.md,
+    marginBottom: spacing.lg,
   },
   actionButton: {
     flex: 1,
-    borderRadius: 12,
-    padding: 20,
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
     alignItems: 'center',
-    minHeight: 120,
+    minHeight: layout.buttonHeight,
     justifyContent: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   photoButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: colors.primary, // Черный
   },
   videoButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: colors.accent, // Темно-красный
   },
   actionButtonIcon: {
     fontSize: 40,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   actionButtonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
+    color: colors.white,
+    fontSize: typography.subheading,
+    fontWeight: typography.bold,
   },
+
+  // История
   historySection: {
     flex: 1,
   },
   historyTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 12,
+    fontSize: typography.body,
+    fontWeight: typography.semibold,
+    color: colors.primary,
+    marginBottom: spacing.md,
   },
   emptyText: {
-    fontSize: 14,
-    color: '#999',
+    fontSize: typography.caption,
+    color: colors.lightGray,
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: spacing.md,
   },
   historyItem: {
-    backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 8,
+    backgroundColor: colors.white,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    marginBottom: spacing.sm,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderLeftWidth: 3,
+    borderLeftColor: colors.accent, // Темно-красный акцент
   },
   historyFilename: {
-    fontSize: 12,
-    color: '#333',
+    fontSize: typography.small,
+    color: colors.primary,
     flex: 1,
   },
   historyMeta: {
-    marginLeft: 10,
+    marginLeft: spacing.sm,
   },
   audioIndicatorYes: {
-    fontSize: 12,
-    color: '#4CAF50',
+    fontSize: typography.small,
+    color: colors.success,
   },
   audioIndicatorNo: {
-    fontSize: 12,
-    color: '#999',
+    fontSize: typography.small,
+    color: colors.lightGray,
   },
 });
